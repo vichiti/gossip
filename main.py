@@ -2,6 +2,7 @@ import os
 import requests
 from fastapi import FastAPI, Request
 from pyrogram import Client, filters, types
+import uvicorn
 
 # Load environment variables
 API_ID = int(os.getenv("API_ID", 0))
