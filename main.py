@@ -38,6 +38,10 @@ async def shutdown():
     await bot.stop()
     print("Bot stopped successfully!")
 
+@app.get("/")
+def read_root():
+    return {"status": "Gossip Net is running from new pyrogram method"}
+
 @app.post("/webhook")
 async def webhook(request: Request):
     try:
