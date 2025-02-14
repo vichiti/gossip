@@ -31,7 +31,7 @@ def handle_message(client, message):
 async def webhook(request: Request):
     """Receives updates from Telegram and processes them."""
     data = await request.json()
-    bot.process_update(data)
+    # bot.process_update(data)
     return {"status": "OK"}
 
 @app.get("/")
