@@ -1,45 +1,65 @@
 import os
+import requests
 from fastapi import FastAPI, Request
-from pyrogram import Client
-from dotenv import load_dotenv
-import uvicorn
+from pyrogram import Client, filters, types
 
-# Load environment variables from .env file
-load_dotenv()
-
-# Get credentials from environment variables
-API_ID = int(os.getenv("API_ID", 0))
-API_HASH = os.getenv("API_HASH")
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-PORT = int(os.getenv("PORT", 8000))  # Render assigns a port dynamically
-
-# Ensure the correct timezone
-os.environ["TZ"] = "UTC"
-
-# Initialize Pyrogram bot client
-bot = Client("my_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+# Load environment variables
+bot_token = os.environ.get("bot_token")
+api_id = int(os.environ.get("api_id"))
+api_hash = os.environ.get("api_hash")
 
 # Initialize FastAPI app
 app = FastAPI()
 
-@bot.on_message()
-def handle_message(client, message):
-    """Handles incoming messages."""
-    message.reply(f"You said: {message.text}")
+# Initialize Pyrogram bot
+bot = Client("vyomcanvabot_glitch", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
+
+# Webhook URL (Replace with your Glitch project URL)
+WEBHOOK_URL = "https://gossip-bbzn.onrender.com/webhook"  # Replace this with your actual Glitch URL
+
+@app.on_event("startup")
+async def startup():
+    print("Starting bot...")
+    await bot.start()
+
+    # Set webhook for the bot using Telegram's setWebhook API
+    set_webhook_url = f"https://api.telegram.org/bot{bot_token}/setWebhook?url={WEBHOOK_URL}"
+    response = requests.get(set_webhook_url)
+    if response.status_code == 200:
+        print(f"Webhook set to {WEBHOOK_URL}")
+    else:
+        print(f"Failed to set webhook: {response.text}")
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    """Remove the webhook when the FastAPI app shuts down"""
+    print("Stopping bot...")
+    await bot.remove_webhook()  # Remove the webhook
+    print("Webhook removed successfully!")
 
 @app.post("/webhook")
 async def webhook(request: Request):
-    """Receives updates from Telegram and processes them."""
-    data = await request.json()
-    # bot.process_update(data)
-    return {"status": "OK"}
+    """Handle incoming updates from Telegram"""
+    json_data = await request.json()  # Get the incoming webhook data
+    
+    update = types.Update.de_json(json_data)  # Convert it to a Pyrogram Update object
+    print(update)
+    await bot.process_update(update)  # Process the update with Pyrogram
+    return {"status": "ok"}
 
+# Simple endpoint to keep Glitch running
 @app.get("/")
-async def home():
-    """Health check endpoint."""
-    return {"message": "Bot is running successfully"}
+def read_root():
+    return {"status": "Gossip Net is running"}
 
-# Start bot and FastAPI together
-if __name__ == "__main__":
-    bot.start()
-    uvicorn.run(app, host="0.0.0.0", port=PORT)
+# Define a handler to process messages
+@bot.on_message(filters.text)
+async def echo(client, message):
+    """Simple echo handler: Responds to 'hi' and 'hello'"""
+    text = message.text.lower()
+    if text in ['hi', 'hello']:
+        await message.reply_text("Hello! How can I help you today?")
+    else:
+        await message.reply_text("I received your message: " + message.text)
+
