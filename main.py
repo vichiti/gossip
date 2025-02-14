@@ -1,7 +1,7 @@
 import os
 import requests
 from fastapi import FastAPI, Request
-from pyrogram import Client
+from pyrogram import Client, filters
 from pyrogram.types import Update, Message
 import uvicorn
 from dotenv import load_dotenv
@@ -55,7 +55,7 @@ async def webhook(request: Request):
 # Simple endpoint to keep Glitch running
 @app.get("/")
 def read_root():
-    return {"status": "VyomVividBot is running"}
+    return {"status": "gossip net is running 5"}
 
 # Define a handler to process messages
 @bot.on_message(filters.text)
