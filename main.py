@@ -50,8 +50,10 @@ async def webhook(request: Request):
     try:
         data = await request.json()
         print("Received update:", data)  # Debugging
-        update = Update.de_json(data)  # Convert JSON to Pyrogram Update object
-        await bot.process_update(update)  # Process the update
+
+        # Process update correctly
+        await bot.process_update(data)
+        
         return {"status": "OK"}
     except Exception as e:
         print("Error processing webhook:", e)  # Debugging
