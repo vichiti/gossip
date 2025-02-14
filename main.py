@@ -48,11 +48,12 @@ async def shutdown():
 @app.post("/webhook")
 async def webhook(request: Request):
     try:
+        # Parse the incoming JSON data
         data = await request.json()
         print("📩 Webhook received:", data)  # Debugging
 
-        # Convert the raw data directly to Update object
-        update = Update(**data)  # Create an Update object
+        # Convert the raw data to an Update object
+        update = Update.read(data)  # Use Update.read to parse the data
         await bot.process_update(update)  # Process the update
 
         return {"status": "OK"}
@@ -63,7 +64,7 @@ async def webhook(request: Request):
 # Simple endpoint to keep Glitch running
 @app.get("/")
 def read_root():
-    return {"status": "Gossip Net is running 11"}
+    return {"status": "Gossip Net is running 12"}
 
 # Define a handler to process messages
 @bot.on_message(filters.text)
