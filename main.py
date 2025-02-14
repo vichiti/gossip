@@ -62,7 +62,7 @@ async def webhook(request: Request):
 # Simple endpoint to keep Glitch running
 @app.get("/")
 def read_root():
-    return {"status": "Gossip Net is running"}
+    return {"status": "Gossip Net is running 9"}
 
 # Define a handler to process messages
 @bot.on_message(filters.text)
