@@ -44,31 +44,28 @@ def read_root():
 
 @app.post("/webhook")
 async def webhook(request: Request):
-    try:
-        data = await request.json()
-        message = Message._parse(client=bot, update=data.get("message", {}))
-        if message:
-            await handle_message(bot, message)
-        return {"status": "OK"}
-    except Exception as e:
-        print(f"Webhook Error: {e}")
-        return {"error": str(e)}
+    """Handle incoming updates from Telegram"""
+    json_data = await request.json()  # Get the incoming webhook data
+    
+    update = Update.parse_obj(json_data)  # Convert it to a Pyrogram Update object
+    print(update)
+    await bot.handle_update(update)  # Process the update with Pyrogram
+    return {"status": "ok"}
 
-async def handle_message(client: Client, message: Message):
-    if message.text:
-        await handle_text(client, message)
-    elif message.photo:
-        await handle_photo(client, message)
+# Simple endpoint to keep Glitch running
+@app.get("/")
+def read_root():
+    return {"status": "VyomVividBot is running"}
 
-async def handle_text(client: Client, message: Message):
+# Define a handler to process messages
+@bot.on_message(filters.text)
+async def echo(client, message):
+    """Simple echo handler: Responds to 'hi' and 'hello'"""
     text = message.text.lower()
     if text in ['hi', 'hello']:
         await message.reply_text("Hello! How can I help you today?")
     else:
-        await message.reply_text(f"I received your message: {message.text}")
-
-async def handle_photo(client: Client, message: Message):
-    await message.reply_text("Nice photo! Thanks for sharing.")
+        await message.reply_text("I received your message: " + message.text)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))  # Default to 8000 if PORT is not set
