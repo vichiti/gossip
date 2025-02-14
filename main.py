@@ -4,15 +4,15 @@ from fastapi import FastAPI, Request
 from pyrogram import Client, filters, types
 
 # Load environment variables
-bot_token = os.environ.get("bot_token")
-api_id = int(os.environ.get("api_id"))
-api_hash = os.environ.get("api_hash")
+API_ID = int(os.getenv("API_ID", 0))
+API_HASH = os.getenv("API_HASH")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 # Initialize FastAPI app
 app = FastAPI()
 
 # Initialize Pyrogram bot
-bot = Client("vyomcanvabot_glitch", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
+bot = Client("vyomcanvabot_glitch", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
 # Webhook URL (Replace with your Glitch project URL)
 WEBHOOK_URL = "https://gossip-bbzn.onrender.com/webhook"  # Replace this with your actual Glitch URL
