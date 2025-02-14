@@ -17,7 +17,7 @@ PORT = int(os.getenv("PORT", 8000))  # Render assigns a port dynamically
 os.environ["TZ"] = "UTC"
 
 # Initialize Pyrogram bot client
-bot = Client("my_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+bot = Client("my_bot" bot_token=BOT_TOKEN)  #, api_id=API_ID, api_hash=API_HASH,
 
 # Initialize FastAPI app
 app = FastAPI()
