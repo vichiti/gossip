@@ -24,7 +24,7 @@ async def startup():
     await bot.start()
 
     # Set webhook for the bot using Telegram's setWebhook API
-    set_webhook_url = f"https://api.telegram.org/bot{bot_token}/setWebhook?url={WEBHOOK_URL}"
+    set_webhook_url = f"https://api.telegram.org/bot{BOT_TOKEN}/setWebhook?url={WEBHOOK_URL}"
     response = requests.get(set_webhook_url)
     if response.status_code == 200:
         print(f"Webhook set to {WEBHOOK_URL}")
