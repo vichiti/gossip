@@ -47,8 +47,7 @@ async def webhook(request: Request):
     """Handle incoming updates from Telegram"""
     json_data = await request.json()  # Get the incoming webhook data
     
-    update = Update(**json_data)  # Convert JSON data to a Pyrogram Update object
-    await bot.process_new_updates([update])  # Process the update with Pyrogram
+    await bot.process_raw_update(json_data)  # Process the raw JSON update with Pyrogram
     return {"status": "ok"}
 
 # Simple endpoint to keep Glitch running
