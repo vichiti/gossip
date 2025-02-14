@@ -6,6 +6,7 @@ import os
 
 # Load environment variables from .env file
 load_dotenv()
+os.environ["TZ"] = "UTC"
 
 # Get the credentials from .env
 API_ID = os.getenv("API_ID")
