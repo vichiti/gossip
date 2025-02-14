@@ -38,22 +38,22 @@ async def shutdown():
     await bot.stop()
     print("Bot stopped successfully!")
 
-@app.get("/")
-def read_root():
-    return {"status": "Gossip Net is running from new pyrogram method"}
 
 @app.post("/webhook")
 async def webhook(request: Request):
-    """Handle incoming updates from Telegram"""
-    json_data = await request.json()  # Get the incoming webhook data
-    
-    await bot.process_raw_update(json_data)  # Process the raw JSON update with Pyrogram
-    return {"status": "ok"}
+    try:
+        json_data = await request.json()
+        update = Update.from_json(json_data)
+        await bot.handle_update(update)
+        return {"status": "ok"}
+    except Exception as e:
+        print(f"Error processing update: {e}")
+        return {"status": "error", "message": str(e)}
 
 # Simple endpoint to keep Glitch running
 @app.get("/")
 def read_root():
-    return {"status": "gossip net is running 5"}
+    return {"status": "gossip net is running 16"}
 
 # Define a handler to process messages
 @bot.on_message(filters.text)
