@@ -46,9 +46,9 @@ def read_root():
 async def webhook(request: Request):
     try:
         data = await request.json()
-        update = Update.de_json(data, bot)  # Convert JSON data to Update object
-        if update.message:
-            await handle_message(bot, update.message)
+        message = Message._parse(client=bot, update=data.get("message", {}))
+        if message:
+            await handle_message(bot, message)
         return {"status": "OK"}
     except Exception as e:
         print(f"Webhook Error: {e}")
