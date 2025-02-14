@@ -1,17 +1,14 @@
 import os
 import requests
 from fastapi import FastAPI, Request
-from pyrogram.types import Update
-from pyrogram import Client, filters, types
-from pyrogram.raw.types import UpdateBotWebhookJSON
+from pyrogram import Client
+from pyrogram.types import Update, Message
 import uvicorn
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
 
-
-# Load environment variables
 API_ID = int(os.getenv("API_ID", 0))
 API_HASH = os.getenv("API_HASH")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -20,16 +17,14 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 app = FastAPI()
 
 # Initialize Pyrogram bot
-bot = Client("vyomcanvabot_glitch", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+bot = Client("my_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
-# Webhook URL (Replace with your Glitch project URL)
-WEBHOOK_URL = "https://gossip-bbzn.onrender.com/webhook"  # Replace this with your actual Glitch URL
+# Webhook URL
+WEBHOOK_URL = "https://gossip-bbzn.onrender.com/webhook"  # Replace with your actual URL
 
 @app.on_event("startup")
 async def startup():
-    print("Starting bot...")
     await bot.start()
-
     # Set webhook for the bot using Telegram's setWebhook API
     set_webhook_url = f"https://api.telegram.org/bot{BOT_TOKEN}/setWebhook?url={WEBHOOK_URL}"
     response = requests.get(set_webhook_url)
@@ -38,43 +33,38 @@ async def startup():
     else:
         print(f"Failed to set webhook: {response.text}")
 
-
 @app.on_event("shutdown")
 async def shutdown():
-    """Remove the webhook when the FastAPI app shuts down"""
-    print("Stopping bot...")
-    await bot.remove_webhook()  # Remove the webhook
-    print("Webhook removed successfully!")
+    await bot.stop()
+    print("Bot stopped successfully!")
 
 @app.post("/webhook")
 async def webhook(request: Request):
     try:
         data = await request.json()
-        print("📩 Webhook received:", data)  # Debugging
-
-        # Convert the raw data directly to UpdateBotWebhookJSON object
-        update = UpdateBotWebhookJSON(data=data)  # Create an UpdateBotWebhookJSON object
-        await bot.process_update(update)  # Process the update
-
+        update = Update.de_json(data, bot)  # Convert JSON data to Update object
+        if update.message:
+            await handle_message(bot, update.message)
         return {"status": "OK"}
     except Exception as e:
-        print("❌ Webhook Error:", e)  # Debugging
+        print(f"Webhook Error: {e}")
         return {"error": str(e)}
 
-# Simple endpoint to keep Glitch running
-@app.get("/")
-def read_root():
-    return {"status": "Gossip Net is running 12"}
+async def handle_message(client: Client, message: Message):
+    if message.text:
+        await handle_text(client, message)
+    elif message.photo:
+        await handle_photo(client, message)
 
-# Define a handler to process messages
-@bot.on_message(filters.text)
-async def echo(client, message):
-    """Simple echo handler: Responds to 'hi' and 'hello'"""
+async def handle_text(client: Client, message: Message):
     text = message.text.lower()
     if text in ['hi', 'hello']:
         await message.reply_text("Hello! How can I help you today?")
     else:
-        await message.reply_text("I received your message: " + message.text)
+        await message.reply_text(f"I received your message: {message.text}")
+
+async def handle_photo(client: Client, message: Message):
+    await message.reply_text("Nice photo! Thanks for sharing.")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))  # Default to 8000 if PORT is not set
