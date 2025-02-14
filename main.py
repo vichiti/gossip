@@ -5,6 +5,9 @@ from pyrogram import Client, filters
 from pyrogram.types import Update, Message
 import uvicorn
 from dotenv import load_dotenv
+import pyrogram
+
+print(pyrogram.__version__)
 
 # Load environment variables
 load_dotenv()
