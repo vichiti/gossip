@@ -14,3 +14,4 @@ wheel>=0.36.0
 
 # Ensure the latest version of the Telegram client library
 tgcrypto>=1.2.3
+requests
