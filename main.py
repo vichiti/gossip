@@ -47,17 +47,13 @@ async def shutdown():
 
 @app.post("/webhook")
 async def webhook(request: Request):
-    try:
-        data = await request.json()
-        print("Received update:", data)  # Debugging
-
-        # Process update correctly
-        await bot.process_update(data)
-        
-        return {"status": "OK"}
-    except Exception as e:
-        print("Error processing webhook:", e)  # Debugging
-        return {"error": str(e)}
+    """Handle incoming updates from Telegram"""
+    json_data = await request.json()  # Get the incoming webhook data
+    
+    update = types.Update.de_json(json_data)  # Convert it to a Pyrogram Update object
+    print(update)
+    await bot.process_update(update)  # Process the update with Pyrogram
+    return {"status": "ok"}
 
 # Simple endpoint to keep Glitch running
 @app.get("/")
