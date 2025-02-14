@@ -3,6 +3,7 @@ import requests
 from fastapi import FastAPI, Request
 from pyrogram.types import Update
 from pyrogram import Client, filters, types
+from pyrogram.raw.types import UpdateBotWebhookJSON
 import uvicorn
 from dotenv import load_dotenv
 
@@ -48,12 +49,11 @@ async def shutdown():
 @app.post("/webhook")
 async def webhook(request: Request):
     try:
-        # Parse the incoming JSON data
         data = await request.json()
         print("📩 Webhook received:", data)  # Debugging
 
-        # Convert the raw data to an Update object
-        update = Update.read(data)  # Use Update.read to parse the data
+        # Convert the raw data directly to UpdateBotWebhookJSON object
+        update = UpdateBotWebhookJSON(data=data)  # Create an UpdateBotWebhookJSON object
         await bot.process_update(update)  # Process the update
 
         return {"status": "OK"}
