@@ -1,2 +1,5 @@
-pyrogram==2.0.56
+fastapi
+uvicorn
+pyrogram
+TgCrypto
 python-dotenv
