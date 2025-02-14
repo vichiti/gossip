@@ -1,8 +1,14 @@
 import os
 import requests
 from fastapi import FastAPI, Request
+from pyrogram.types import Update
 from pyrogram import Client, filters, types
 import uvicorn
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
 
 # Load environment variables
 API_ID = int(os.getenv("API_ID", 0))
@@ -41,13 +47,15 @@ async def shutdown():
 
 @app.post("/webhook")
 async def webhook(request: Request):
-    """Handle incoming updates from Telegram"""
-    json_data = await request.json()  # Get the incoming webhook data
-    
-    update = types.Update.de_json(json_data)  # Convert it to a Pyrogram Update object
-    print(update)
-    await bot.process_update(update)  # Process the update with Pyrogram
-    return {"status": "ok"}
+    try:
+        data = await request.json()
+        print("Received update:", data)  # Debugging
+        update = Update.de_json(data)  # Convert JSON to Pyrogram Update object
+        await bot.process_update(update)  # Process the update
+        return {"status": "OK"}
+    except Exception as e:
+        print("Error processing webhook:", e)  # Debugging
+        return {"error": str(e)}
 
 # Simple endpoint to keep Glitch running
 @app.get("/")
