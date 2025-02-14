@@ -2,11 +2,15 @@
 from pyrogram import Client
 from dotenv import load_dotenv
 import os
+import time
 
+# Synchronize system time
+os.system("ntpdate pool.ntp.org")  # Sync time with NTP server
+time.sleep(2)  # Wait 2 seconds to stabilize
 
 # Load environment variables from .env file
 load_dotenv()
-os.environ["TZ"] = "UTC"
+
 
 # Get the credentials from .env
 API_ID = os.getenv("API_ID")
@@ -16,7 +20,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 
 # Initialize the Pyrogram client
-app = Client("my_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+app = Client("my_bot", bot_token=BOT_TOKEN)  #, api_id=API_ID, api_hash=API_HASH
 
 # Define a message handler
 @app.on_message()
