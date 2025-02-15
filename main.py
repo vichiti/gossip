@@ -7,7 +7,7 @@ import uvicorn
 from dotenv import load_dotenv
 import pyrogram
 
-print(pyrogram.__version__)
+print(pyrogram.__version__) 
 
 # Load environment variables
 load_dotenv()
@@ -44,14 +44,20 @@ async def shutdown():
 
 @app.post("/webhook")
 async def webhook(request: Request):
+    """Handle incoming updates from Telegram."""
     try:
-        json_data = await request.json()
-        update = Update.from_json(json_data)
-        await bot.handle_update(update)
-        return {"status": "ok"}
+        # Parse the incoming JSON data
+        data = await request.json()
+        print("📩 Webhook received:", data)  # Debugging
+
+        # Convert the raw data to an Update object
+        update = pyrogram.raw.types.Updates.read(data)  # Use Update.read to parse the data
+        await bot.handle_update(update)  # Process the update using Pyrogram
+
+        return {"status": "OK"}
     except Exception as e:
-        print(f"Error processing update: {e}")
-        return {"status": "error", "message": str(e)}
+        print("❌ Webhook Error:", e)  # Debugging
+        return {"error": str(e)}
 
 # Simple endpoint to keep Glitch running
 @app.get("/")
