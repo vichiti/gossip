@@ -2,16 +2,9 @@ fastapi[all]
 uvicorn[standard]
 #python-multipart
 #websockets
-#aiohttp
-
-
-# Specify the latest stable version of Pyrogram
+aiohttp
 pyrogram>=2.0.0
-
-# Include these dependencies to prevent common installation issues
 setuptools>=58.0.0
 wheel>=0.36.0
-
-# Ensure the latest version of the Telegram client library
 tgcrypto>=1.2.3
 requests
