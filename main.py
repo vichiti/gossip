@@ -7,9 +7,9 @@ import pyrogram
 print(pyrogram.__version__)
 
 # Load environment variables
-bot_token = os.environ.get("bot_token")
-api_id = int(os.environ.get("api_id"))
-api_hash = os.environ.get("api_hash")
+bot_token = os.environ.get("BOT_TOKEN")
+api_id = int(os.environ.get("API_ID"))
+api_hash = os.environ.get("API_HASH")
 
 # Initialize FastAPI app
 app = FastAPI()
