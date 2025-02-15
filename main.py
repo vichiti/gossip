@@ -3,6 +3,7 @@ import requests
 from fastapi import FastAPI, Request
 from pyrogram import Client, filters, types
 import pyrogram
+import uvicorn
 
 print(pyrogram.__version__)
 
@@ -68,6 +69,6 @@ async def echo(client, message):
 
 
 
-# if __name__ == "__main__":
-#     port = int(os.environ.get("PORT", 8000))  # Default to 8000 if PORT is not set
-#     uvicorn.run(app, host="0.0.0.0", port=port)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # Default to 8000 if PORT is not set
+    uvicorn.run(app, host="0.0.0.0", port=port)
