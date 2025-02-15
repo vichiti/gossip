@@ -1,3 +1,4 @@
+python>=3.x
 fastapi[all]
 uvicorn[standard]
 #python-multipart
