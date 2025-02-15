@@ -51,8 +51,8 @@ async def webhook(request: Request):
         print("📩 Webhook received:", data)  # Debugging
 
         # Convert the raw data to an Update object
-        update = pyrogram.raw.types.Updates.read(data)  # Use Update.read to parse the data
-        await bot.handle_update(update)  # Process the update using Pyrogram
+        # update = pyrogram.raw.types.Updates.read(data)  # Use Update.read to parse the data
+        await bot.handle_update(data)  # Process the update using Pyrogram
 
         return {"status": "OK"}
     except Exception as e:
