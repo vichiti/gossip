@@ -50,7 +50,7 @@ async def webhook(request: Request):
     try:
         # Parse the incoming JSON data
         update = await request.json()
-        print("📩 Webhook received:", data)  # Debugging
+        print("📩 Webhook received:", update)  # Debugging
 
         # Convert the raw data to an Update object
         # update = Update.read(update)  # Use Update.read to parse the data
@@ -74,7 +74,7 @@ async def webhook(request: Request):
 # Simple endpoint to keep Glitch running
 @app.get("/")
 def read_root():
-    return {"status": "@gossipsnet is running python 1000"}
+    return {"status": "@gossipsnet is running python 27"}
 
 # Define a handler to process messages
 @bot.on_message(filters.text)
