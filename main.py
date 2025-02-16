@@ -46,8 +46,9 @@ async def shutdown():
 async def webhook(request: Request):
     """Receives updates from Telegram."""
     data = await request.json()
-    update = types.Update.model_validate(data)  # Convert JSON to Pyrogram Update
-    await bot.handle_update(update)
+    print(data)
+    # update = types.Update.model_validate(data)  # Convert JSON to Pyrogram Update
+    await bot.handle_update(data)
     return {"status": "ok"}
 
 
@@ -55,7 +56,7 @@ async def webhook(request: Request):
 # Simple endpoint to keep Glitch running
 @app.get("/")
 def read_root():
-    return {"status": "@gossipsnet is running python 99"}
+    return {"status": "@gossipsnet is running python 1000"}
 
 # Define a handler to process messages
 @bot.on_message(filters.text)
