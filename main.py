@@ -8,7 +8,7 @@ from pyrogram import Client, filters
 
 # Load environment variables
 bot_token = os.environ.get("BOT_TOKEN")
-api_id = int(os.environ.get("API_TOKEN"))
+api_id = int(os.environ.get("API_ID"))
 api_hash = os.environ.get("API_HASH")
 GLITCH_PROJECT_URL = "https://gossip-bbzn.onrender.com/"  # Add this to your .env file
 PERPLEXITY_API_KEY = os.environ.get("PERPLEXITY_API_KEY")  # Perplexity AI API Key
