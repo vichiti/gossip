@@ -44,27 +44,11 @@ async def shutdown():
 
 @app.post("/webhook")
 async def webhook(request: Request):
-    """Handle incoming updates from Telegram."""
-    try:
-        # Parse the incoming JSON data
-        data = await request.json()
-        print("📩 Webhook received:", data)  # Debugging
-
-        # Convert the raw data to an Update object
-        update = pyrogram.raw.types.Updates.read(data)  # Use Update.read to parse the data
-
-        # Process the update (works for both old and new Pyrogram versions)
-        if hasattr(bot, "handle_update"):  # For Pyrogram v2.0.0 and above
-            await bot.handle_update(update)
-        elif hasattr(bot, "process_update"):  # For older versions of Pyrogram
-            await bot.process_update(update)
-        else:
-            raise AttributeError("No method found to process updates.")
-
-        return {"status": "OK"}
-    except Exception as e:
-        print("❌ Webhook Error:", e)  # Debugging
-        return {"error": str(e)}
+    """Receives updates from Telegram."""
+    data = await request.json()
+    update = types.Update.model_validate(data)  # Convert JSON to Pyrogram Update
+    await bot.handle_update(update)
+    return {"status": "ok"}
 
 
 
