@@ -46,13 +46,10 @@ async def shutdown():
 
 @app.post("/webhook")
 async def webhook(request: Request):
-    """Handle incoming updates from Telegram via webhook."""
-    update = await request.json()
-    print("Received update:", update)  # Debugging
-
-    # Directly call handlers instead of `process_update()`
-    await bot.invoke(update)  # Latest Pyrogram way to handle webhook updates
-
+    """Process updates from Telegram using Pyrogram."""
+    json_data = await request.json()
+    print(json_data)
+    await bot.handle_updates(json_data)  # ✅ Directly pass the JSON update to Pyrogram
     return {"status": "ok"}
 
 
@@ -62,7 +59,7 @@ async def webhook(request: Request):
 # Simple endpoint to keep Glitch running
 @app.get("/")
 def read_root():
-    return {"status": "@gossipsnet is running python 28"}
+    return {"status": "@gossipsnet is running python 29"}
 
 # Define a handler to process messages
 @bot.on_message(filters.text)
