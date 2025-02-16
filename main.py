@@ -97,10 +97,10 @@ def read_root():
     server_awake = True
     return {"status": "running @VyomCanvasBot with wake up mechanism on web 2"}
 
-# # Run with Uvicorn if needed (but not required on Glitch)
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app, host="0.0.0.0", port=3000)
+# Run with Uvicorn if needed (but not required on Glitch)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=10000)
 
 
 
