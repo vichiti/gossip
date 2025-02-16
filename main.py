@@ -44,13 +44,13 @@ async def shutdown():
 
 
 
-@app.post("/webhook")
-async def webhook(request: Request):
-    """Process updates from Telegram using Pyrogram."""
-    json_data = await request.json()
-    print(json_data)
-    await bot.handle_updates(json_data)  # ✅ Directly pass the JSON update to Pyrogram
-    return {"status": "ok"}
+# @app.post("/webhook")
+# async def webhook(request: Request):
+#     """Process updates from Telegram using Pyrogram."""
+#     json_data = await request.json()
+#     print(json_data)
+#     await bot.handle_updates(json_data)  # ✅ Directly pass the JSON update to Pyrogram
+#     return {"status": "ok"}
 
 
 
