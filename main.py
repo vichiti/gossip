@@ -29,15 +29,17 @@ async def echo(client, message):
     await message.reply_text(f"You said: {message.text}")
 
 async def run_pyrogram():
+    """Runs the Pyrogram bot."""
     async with app:
         print("Bot is running on Render...")
         await asyncio.Event().wait()  # Keeps the bot running
 
-def start():
-    """Run both Pyrogram bot and FastAPI together in the same event loop"""
-    loop = asyncio.get_event_loop()
-    loop.create_task(run_pyrogram())  # Start Pyrogram bot
-    uvicorn.run(server, host="0.0.0.0", port=PORT)  # Start FastAPI server
+async def run():
+    """Run both Pyrogram bot and FastAPI together."""
+    pyrogram_task = asyncio.create_task(run_pyrogram())  # Start Pyrogram bot
+    api_task = asyncio.create_task(uvicorn.run(server, host="0.0.0.0", port=PORT))
+
+    await asyncio.gather(pyrogram_task, api_task)  # Run both tasks concurrently
 
 if __name__ == "__main__":
-    start()
+    asyncio.run(run())  # ✅ Corrected way to start async functions together
