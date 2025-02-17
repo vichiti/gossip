@@ -8,7 +8,7 @@ import uvicorn
 API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-PORT = int(os.environ.get("PORT", 10000))  # Render assigns a dynamic port
+PORT = int(os.getenv("PORT", 10000))  # Render assigns a dynamic port
 
 # Initialize Pyrogram bot
 app = Client("my_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
@@ -33,12 +33,11 @@ async def run_pyrogram():
         print("Bot is running on Render...")
         await asyncio.Event().wait()  # Keeps the bot running
 
-async def run():
-    # Run both FastAPI (fake web server) and Pyrogram bot together
-    await asyncio.gather(
-        run_pyrogram(),
-        uvicorn.run(server, host="0.0.0.0", port=PORT, loop="asyncio")
-    )
+def start():
+    """Run both Pyrogram bot and FastAPI together in the same event loop"""
+    loop = asyncio.get_event_loop()
+    loop.create_task(run_pyrogram())  # Start Pyrogram bot
+    uvicorn.run(server, host="0.0.0.0", port=PORT)  # Start FastAPI server
 
 if __name__ == "__main__":
-    asyncio.run(run())
+    start()
