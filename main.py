@@ -18,11 +18,12 @@ async def start(client, message):
 async def echo(client, message):
     await message.reply_text(f"You said: {message.text}")
 
-# Run the bot
 async def main():
+    """Start Pyrogram Client."""
     async with app:
         print("Bot is running on Render...")
-        await idle()  # Keeps the bot running
+        await asyncio.Event().wait()  # Keeps the bot running
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())  # ✅ Correct way to run an async function
